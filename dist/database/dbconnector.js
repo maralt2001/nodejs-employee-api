@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const WorkingDBConnectionString = process.env.DB_ConnectionString;
 const employee_1 = require("../models/employee");
 const mongoose = require('mongoose');
+// Connect to database async - return a promise of string
 function connectToDBAsync() {
     let p = new Promise(function (resolve, reject) {
         mongoose.connect(WorkingDBConnectionString, { useNewUrlParser: true }, function (err) {
@@ -18,6 +19,7 @@ function connectToDBAsync() {
     return p;
 }
 exports.connectToDBAsync = connectToDBAsync;
+// check a http request body if it is empty - return a boolean
 function CheckDBResponseIsEmpty(content) {
     if (content.length > 0) {
         return false;
@@ -27,6 +29,7 @@ function CheckDBResponseIsEmpty(content) {
     }
 }
 exports.CheckDBResponseIsEmpty = CheckDBResponseIsEmpty;
+// save a Employee to database
 function SaveEmployeeAsync(content) {
     let p = new Promise((resolve, reject) => {
         try {
