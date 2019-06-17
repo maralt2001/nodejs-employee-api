@@ -26,23 +26,59 @@ const url = `http://localhost:${port}/api/employees`;
 app.use(express_1.default.json());
 // Get all Employees from Collection employees (mongodb://localhost/WebDB)
 app.get('/api/employees', (req, res, next) => __awaiter(this, void 0, void 0, function* () {
-    try {
-        let findUser = yield employee_1.Employee.find({}, { "_id": false, "__v": false });
-        let check = dbconnector_1.CheckDBResponseIsEmpty(findUser);
-        if (check == true) {
-            res.status(204).send({ message: "No Employees in DB" });
-            return next();
-        }
-        else {
-            res.status(200).json(findUser);
+    let props = req.query;
+    let counter = Object.keys(props).length;
+    // if query in request do this
+    if (counter != 0) {
+        let firstname = props.firstname;
+        let lastname = props.lastname;
+        if ('firstname' in props && 'lastname' in props && counter == 2) {
+            let findUser = yield employee_1.Employee.find({ firstname: { $regex: "^" + firstname }, lastname: { $regex: "^" + lastname } }, { "_id": false, "__v": false });
+            let check = dbconnector_1.CheckDBResponseIsEmpty(findUser);
+            check == false ? res.status(200).json(findUser) : res.status(500).json({ message: 'user not found' });
             eventListener_1.logger.emit('infoRequest', req);
             return next();
         }
+        if ('firstname' in props && counter == 1) {
+            let findUser = yield employee_1.Employee.find({ firstname: { $regex: "^" + firstname } }, { "_id": false, "__v": false });
+            let check = dbconnector_1.CheckDBResponseIsEmpty(findUser);
+            check == false ? res.status(200).json(findUser) : res.status(500).json({ message: 'user not found' });
+            eventListener_1.logger.emit('infoRequest', req);
+            return next();
+        }
+        if ('lastname' in props && counter == 1) {
+            let findUser = yield employee_1.Employee.find({ lastname: { $regex: "^" + lastname } }, { "_id": false, "__v": false });
+            let check = dbconnector_1.CheckDBResponseIsEmpty(findUser);
+            check == false ? res.status(200).json(findUser) : res.status(500).json({ message: 'user not found' });
+            eventListener_1.logger.emit('infoRequest', req);
+            return next();
+        }
+        // unexpected query do this
+        else {
+            res.status(500).json({ message: 'This is a invalid Parameter' });
+            return next();
+        }
     }
-    catch (error) {
-        console.log(error);
-        res.status(500).send({ message: "Internal Error" });
-        next();
+    // else no query in request do this
+    else {
+        try {
+            let findUser = yield employee_1.Employee.find({}, { "_id": false, "__v": false });
+            let check = dbconnector_1.CheckDBResponseIsEmpty(findUser);
+            if (check == true) {
+                res.status(204).send({ message: "No Employees in DB" });
+                return next();
+            }
+            else {
+                res.status(200).json(findUser);
+                eventListener_1.logger.emit('infoRequest', req);
+                return next();
+            }
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ message: "Internal Error" });
+            next();
+        }
     }
 }));
 // Get one Employee from Collection employees
