@@ -19,27 +19,72 @@ app.use(express.json())
 
 // Get all Employees from Collection employees (mongodb://localhost/WebDB)
 app.get('/api/employees', async (req: Request, res: Response, next: NextFunction) => {
-        
-        try {
-        
-            let findUser:Array<JSON> = await Employee.find({}, {"_id": false, "__v": false});
-            let check = CheckDBResponseIsEmpty(findUser);
+    
+        let props = req.query
+        let counter = Object.keys(props).length
+        // if query in request do this
+        if(counter != 0) {
+            
+            let firstname = props.firstname
+            let lastname = props.lastname
 
-            if (check == true) {
-                res.status(204).send({message: "No Employees in DB"})
+            if('firstname' in props && 'lastname' in props && counter == 2) {
+                
+                let findUser:Array<JSON> = await Employee.find({firstname: {$regex: "^"+firstname}, lastname:{$regex: "^"+lastname}}, {"_id": false, "__v": false});
+                let check = CheckDBResponseIsEmpty(findUser)
+                check == false ? res.status(200).json(findUser) : res.status(500).json({message: 'user not found'})
+                logger.emit('infoRequest', req);
                 return next()
-            } 
-            else {
-                res.status(200).json(findUser)
+                
+            }
+            if('firstname' in props && counter == 1) {
+                
+                let findUser:Array<JSON> = await Employee.find({firstname: {$regex: "^"+firstname}}, {"_id": false, "__v": false});
+                let check = CheckDBResponseIsEmpty(findUser)
+                check == false ? res.status(200).json(findUser) : res.status(500).json({message: 'user not found'})
                 logger.emit('infoRequest', req);
                 return next()
             }
+            if('lastname' in props && counter == 1) {
+                
+                let findUser:Array<JSON> = await Employee.find({lastname: {$regex: "^"+lastname}}, {"_id": false, "__v": false});
+                let check = CheckDBResponseIsEmpty(findUser)
+                check == false ? res.status(200).json(findUser) : res.status(500).json({message: 'user not found'})
+                logger.emit('infoRequest', req);
+                return next()
+                
+            }
+            // unexpected query do this
+            else {
+                res.status(500).json({message: 'This is a invalid Parameter'})
+                return next()
+            }
+            
         }
+        // else no query in request do this
+        else {
 
-         catch (error) {
-            console.log(error);
-            res.status(500).send({message: "Internal Error"})
-            next();
+            try {
+            
+                let findUser:Array<JSON> = await Employee.find({}, {"_id": false, "__v": false});
+                let check = CheckDBResponseIsEmpty(findUser);
+
+                if (check == true) {
+                    res.status(204).send({message: "No Employees in DB"})
+                    return next()
+                } 
+                else {
+                    res.status(200).json(findUser)
+                    logger.emit('infoRequest', req);
+                    return next()
+                }
+            }
+
+            catch (error) {
+                console.log(error);
+                res.status(500).send({message: "Internal Error"})
+                next();
+            }
         }
 
 });
