@@ -35,5 +35,18 @@ module.exports = {
        let savedEmployee = {id: result.id, firstname: result.firstname, lastname: result.lastname}
        return savedEmployee;
         
+    },
+
+    updateEmployeeId: async(args:any) => {
+        
+         return await Employee.findOneAndUpdate({id:args.currentId}, {$set: {id:args.newId}},{'useFindAndModify': false})
+    },
+    updateEmployeeFirstname: async(args:any) => {
+        
+        return await Employee.findOneAndUpdate({id:args.id}, {$set: {firstname:args.newFirstname}},{'useFindAndModify': false})
+    },
+    updateEmployeeLastname: async(args:any) => {
+
+        return await Employee.findOneAndUpdate({id:args.id}, {$set: {lastname:args.newLastname}},{'useFindAndModify': false})
     }
 }

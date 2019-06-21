@@ -23,6 +23,9 @@ input EmployeeInput {
 
 type RootMutation {
     createEmployee(employeeInput: EmployeeInput): Employee
+    updateEmployeeId(currentId: Int, newId: Int): Employee
+    updateEmployeeFirstname(id: Int, newFirstname: String): Employee
+    updateEmployeeLastname(id: Int, newLastname: String): Employee
 }
 
 schema {

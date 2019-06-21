@@ -37,5 +37,14 @@ module.exports = {
         let result = yield newEmployee.save();
         let savedEmployee = { id: result.id, firstname: result.firstname, lastname: result.lastname };
         return savedEmployee;
+    }),
+    updateEmployeeId: (args) => __awaiter(this, void 0, void 0, function* () {
+        return yield employee_1.Employee.findOneAndUpdate({ id: args.currentId }, { $set: { id: args.newId } }, { 'useFindAndModify': false });
+    }),
+    updateEmployeeFirstname: (args) => __awaiter(this, void 0, void 0, function* () {
+        return yield employee_1.Employee.findOneAndUpdate({ id: args.id }, { $set: { firstname: args.newFirstname } }, { 'useFindAndModify': false });
+    }),
+    updateEmployeeLastname: (args) => __awaiter(this, void 0, void 0, function* () {
+        return yield employee_1.Employee.findOneAndUpdate({ id: args.id }, { $set: { lastname: args.newLastname } }, { 'useFindAndModify': false });
     })
 };
