@@ -7,10 +7,13 @@ import {ILogItem} from './models/ilog'
 import {logger} from "./events/eventListener"
 import {isEmptyObject, IQueryLogBody, GetStartEndDate, IObjectStartEndDate, GetQuery, ValidateUser} from "./tools/tools"
 import { IEmployee } from './models/iemployee';
+import { json } from 'body-parser';
 
+const ResolverEmployee = require('./resolvers/ResolverEmployees')
+const SchemaEmployee = require('./schemas/SchemaEmployees')
 const bodyParser = require ('body-parser')
 const graphqlHttp = require ('express-graphql')
-const {buildSchema} = require ('graphql')
+
 
 const dotenv = require('dotenv').config()
 const mongoose = require ('mongoose')
@@ -22,54 +25,11 @@ const url:string = `http://localhost:${port}/api/employees`
 
 app.use(bodyParser.json())
 
-// GraphQL Endpoint=/graphql functions are getEmployees / createEmployees
+// GraphQL Endpoint=/graphql
 app.use('/graphql', graphqlHttp({
-
-    schema: buildSchema(`
-        type Employee {
-            id: Int!
-            firstname: String!
-            lastname: String!
-        }    
-
-        type RootQuery {
-            employees: [Employee!]!
-        }
-
-        input EmployeeInput {
-            id: Int!
-            firstname: String!
-            lastname: String!
-        }
-
-        type RootMutation {
-            createEmployee(employeeInput: EmployeeInput): Employee
-        }
     
-        schema {
-            query: RootQuery
-            mutation: RootMutation
-        }
-    `),
-    rootValue: {
-        employees: async () => {
-            let findUser:Array<JSON> = await Employee.find({}, { "__v": false});
-            return findUser
-        },
-        createEmployee: async (args:any) => {
-
-        const newEmployee = new Employee({
-            _id: new mongoose.Types.ObjectId(),
-            id: args.employeeInput.id,
-            firstname:  args.employeeInput.firstname,
-            lastname: args.employeeInput.lastname})
-              
-           let result:IEmployee = await newEmployee.save() 
-           let savedEmployee = {id: result.id, firstname: result.firstname, lastname: result.lastname}
-           return savedEmployee;
-            
-        }
-    },
+    schema: SchemaEmployee,
+    rootValue: ResolverEmployee,
     graphiql: true
 
 }))
