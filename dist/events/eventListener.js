@@ -22,15 +22,15 @@ exports.logger.on('infoRequest', (data) => {
     let dateTime = new Date();
     let protocol = data.protocol;
     let method = data.method;
-    WriteLogItemToDB(dateTime, url, protocol, method).then(resolve => console.log(`[${resolve.DateTime.toLocaleTimeString()}] [Request Url] = ${resolve.RequestedUrl} [Request Protocol] = ${resolve.RequestedProtocol} [Request Method] = ${resolve.RequestedMethod}`), reject => console.error(reject));
+    WriteLogItemToDB(dateTime, url, protocol, method).then(resolve => console.log(`[${resolve.dateTime.toLocaleTimeString()}] [Request Url] = ${resolve.requestedUrl} [Request Protocol] = ${resolve.requestedProtocol} [Request Method] = ${resolve.requestedMethod}`), reject => console.error(reject));
     function WriteLogItemToDB(date, content, protocol, method) {
         return __awaiter(this, void 0, void 0, function* () {
             let log = new log_1.Log({
                 _id: new mongoose.Types.ObjectId(),
-                DateTime: date,
-                RequestedUrl: content,
-                RequestedProtocol: protocol,
-                RequestedMethod: method
+                dateTime: date,
+                requestedUrl: content,
+                requestedProtocol: protocol,
+                requestedMethod: method
             });
             let p = new Promise(function (resolve, reject) {
                 try {

@@ -10,9 +10,13 @@ import { IEmployee } from './models/iemployee';
 import { json } from 'body-parser';
 
 const ResolverEmployee = require('./resolvers/ResolverEmployees')
+const ResolverLogger = require('./resolvers/ResolverLogger')
 const SchemaEmployee = require('./schemas/SchemaEmployees')
+const SchemaLogger = require('./schemas/SchemaLogger')
 const bodyParser = require ('body-parser')
 const graphqlHttp = require ('express-graphql')
+import {mergeSchemas} from 'graphql-tools'
+import { mergeResolvers} from 'merge-graphql-schemas'
 
 
 const dotenv = require('dotenv').config()
@@ -28,11 +32,13 @@ app.use(bodyParser.json())
 // GraphQL Endpoint=/graphql
 app.use('/graphql', graphqlHttp({
     
-    schema: SchemaEmployee,
-    rootValue: ResolverEmployee,
+    schema: mergeSchemas({schemas:[SchemaEmployee,SchemaLogger]}),
+    rootValue: mergeResolvers([ResolverEmployee,ResolverLogger]),
     graphiql: true
 
 }))
+
+
 
 // Get all Employees from Collection employees (mongodb://localhost/WebDB)
 app.get('/api/employees', async (req: Request, res: Response, next: NextFunction) => {

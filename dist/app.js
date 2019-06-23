@@ -18,9 +18,13 @@ const log_1 = require("./models/log");
 const eventListener_1 = require("./events/eventListener");
 const tools_1 = require("./tools/tools");
 const ResolverEmployee = require('./resolvers/ResolverEmployees');
+const ResolverLogger = require('./resolvers/ResolverLogger');
 const SchemaEmployee = require('./schemas/SchemaEmployees');
+const SchemaLogger = require('./schemas/SchemaLogger');
 const bodyParser = require('body-parser');
 const graphqlHttp = require('express-graphql');
+const graphql_tools_1 = require("graphql-tools");
+const merge_graphql_schemas_1 = require("merge-graphql-schemas");
 const dotenv = require('dotenv').config();
 const mongoose = require('mongoose');
 // set init params of the app
@@ -30,8 +34,8 @@ const url = `http://localhost:${port}/api/employees`;
 app.use(bodyParser.json());
 // GraphQL Endpoint=/graphql
 app.use('/graphql', graphqlHttp({
-    schema: SchemaEmployee,
-    rootValue: ResolverEmployee,
+    schema: graphql_tools_1.mergeSchemas({ schemas: [SchemaEmployee, SchemaLogger] }),
+    rootValue: merge_graphql_schemas_1.mergeResolvers([ResolverEmployee, ResolverLogger]),
     graphiql: true
 }));
 // Get all Employees from Collection employees (mongodb://localhost/WebDB)

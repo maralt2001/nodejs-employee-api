@@ -1,7 +1,7 @@
 
 export interface ILogItem {
-    DateTime: Date
-    RequestedUrl: String 
-    RequestedProtocol: String
-    RequestedMethod: String 
+    dateTime: Date
+    requestedUrl: String 
+    requestedProtocol: String
+    requestedMethod: String 
 }

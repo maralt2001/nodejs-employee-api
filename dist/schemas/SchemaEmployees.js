@@ -1,13 +1,14 @@
 "use strict";
-const { buildSchema } = require('graphql');
-module.exports = buildSchema(`
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.buildSchema = require('graphql').buildSchema;
+module.exports = exports.buildSchema(`
 type Employee {
     id: Int!
     firstname: String!
     lastname: String!
 }    
 
-type RootQuery {
+type EmployeeQuery {
     GetAllEmployees: [Employee!]!
     GetOneEmployeeById(id: Int): Employee!
     GetRegexFirstnameEmployees(firstnameRegex: String): [Employee!]!
@@ -21,7 +22,7 @@ input EmployeeInput {
     lastname: String!
 }
 
-type RootMutation {
+type EmployeeMutation {
     createEmployee(employeeInput: EmployeeInput): Employee
     updateEmployeeId(currentId: Int, newId: Int): Employee
     updateEmployeeFirstname(id: Int, newFirstname: String): Employee
@@ -29,7 +30,7 @@ type RootMutation {
 }
 
 schema {
-    query: RootQuery
-    mutation: RootMutation
+    query: EmployeeQuery
+    mutation: EmployeeMutation
 }
 `);

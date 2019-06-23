@@ -19,17 +19,17 @@ logger.on('infoRequest', (data:Request) => {
     let method = data.method;
    
     WriteLogItemToDB(dateTime,url,protocol,method).then(
-        resolve => console.log(`[${resolve.DateTime.toLocaleTimeString()}] [Request Url] = ${resolve.RequestedUrl} [Request Protocol] = ${resolve.RequestedProtocol} [Request Method] = ${resolve.RequestedMethod}`),
+        resolve => console.log(`[${resolve.dateTime.toLocaleTimeString()}] [Request Url] = ${resolve.requestedUrl} [Request Protocol] = ${resolve.requestedProtocol} [Request Method] = ${resolve.requestedMethod}`),
         reject => console.error(reject)
     )
 
     async function WriteLogItemToDB(date:Date, content:String, protocol:String, method:String):Promise<ILogItem> {
         let log = new Log({
             _id: new mongoose.Types.ObjectId(),
-            DateTime: date,
-            RequestedUrl: content,
-            RequestedProtocol: protocol,
-            RequestedMethod: method            
+            dateTime: date,
+            requestedUrl: content,
+            requestedProtocol: protocol,
+            requestedMethod: method            
         });
        
         let p = new Promise<ILogItem>(function(resolve,reject){

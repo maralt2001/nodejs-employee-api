@@ -1,4 +1,4 @@
-const {buildSchema} = require ('graphql')
+export const {buildSchema} = require ('graphql')
 
 module.exports = buildSchema(`
 type Employee {
@@ -7,7 +7,7 @@ type Employee {
     lastname: String!
 }    
 
-type RootQuery {
+type EmployeeQuery {
     GetAllEmployees: [Employee!]!
     GetOneEmployeeById(id: Int): Employee!
     GetRegexFirstnameEmployees(firstnameRegex: String): [Employee!]!
@@ -21,7 +21,7 @@ input EmployeeInput {
     lastname: String!
 }
 
-type RootMutation {
+type EmployeeMutation {
     createEmployee(employeeInput: EmployeeInput): Employee
     updateEmployeeId(currentId: Int, newId: Int): Employee
     updateEmployeeFirstname(id: Int, newFirstname: String): Employee
@@ -29,7 +29,7 @@ type RootMutation {
 }
 
 schema {
-    query: RootQuery
-    mutation: RootMutation
+    query: EmployeeQuery
+    mutation: EmployeeMutation
 }
 `)
