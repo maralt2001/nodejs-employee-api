@@ -4,4 +4,6 @@ export interface ILogItem {
     requestedUrl: String 
     requestedProtocol: String
     requestedMethod: String 
+
 }
+

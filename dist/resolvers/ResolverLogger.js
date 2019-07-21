@@ -24,19 +24,22 @@ const mongoose = require('mongoose');
 module.exports = {
     GetAllLogs: () => __awaiter(this, void 0, void 0, function* () {
         let findlogs = yield log_1.Log.find({}, { "__v": false });
-        return findlogs.map(logItem => { return Object.assign({}, logItem._doc, { dateTime: logItem.dateTime.toUTCString() }); }); //change date Format to UTC String
+        return findlogs.map(logItem => { return Object.assign({}, logItem._doc, { dateTime: setTimeFormat(logItem.dateTime) }); });
     }),
     createLog: (args) => __awaiter(this, void 0, void 0, function* () {
         const newLogItem = new log_1.Log({
             _id: new mongoose.Types.ObjectId(),
-            DateTime: new Date(),
-            RequestedUrl: args.logInput.requestedUrl,
-            RequestedProtocol: args.logInput.requestedProtocol,
-            RequestedMethod: args.logInput.requestedMethod
+            dateTime: new Date(),
+            requestedUrl: args.logInput.requestedUrl,
+            requestedProtocol: args.logInput.requestedProtocol,
+            requestedMethod: args.logInput.requestedMethod
         });
         let result = yield newLogItem.save();
         let properties = __rest(result._doc, []);
-        properties.dateTime = properties.dateTime.toUTCString();
+        properties.dateTime = setTimeFormat(properties.dateTime);
         return (properties);
     })
 };
+function setTimeFormat(timeItem) {
+    return timeItem.toLocaleString();
+}

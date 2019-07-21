@@ -30,3 +30,4 @@ schema {
     mutation: LoggerMutation
 }
 `)
+ 
