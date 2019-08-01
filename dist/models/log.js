@@ -6,6 +6,6 @@ const logSchema = new mongoose.Schema({
     dateTime: Date,
     requestedUrl: String,
     requestedProtocol: String,
-    requestedMethod: String
+    requestedMethod: String,
 });
 exports.Log = mongoose.model('Log', logSchema);
